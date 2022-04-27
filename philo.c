@@ -21,6 +21,7 @@ void	eating(t_data *data)
 	int	j;
 
 	i = 0;
+	j = 0;
 	while (i < data->nb_philo)
 	{
 		if (data->ate_or_no[i] == data->nb_of_cycles)
@@ -40,19 +41,41 @@ void	eating(t_data *data)
 		data->nb_of_cycles++;
 }
 
+void*	testt()
+{
+	if (1)
+	{
+		printf("%sthread is working\n", cyan);
+		printf("%s2nd msg\n", yellow);
+	}
+	return (0);
+}
+
 int main(int argc, char **argv)
 {
-    t_data  data;
-	struct timeval current;
-    int     j;
+	t_data			data;
+	int				j;
 	int		i;
+	pthread_t	*test;
+	test = NULL;
 
-    if (argc != 5 && argc != 6)
-    {
-        printf("%sError, invalid number of arguments!!\n", yellow);
-        exit(1);
-    }
+	i = 0;
+	j = 0;
+	test = malloc(5 * sizeof(pthread_t));
+	while (i < 5)
+	{
+		pthread_create(&test[i], NULL, &testt, NULL);
+		pthread_join(test[i], NULL);
+		i++;
+	}
+	i = 0;
+	if (argc != 5 && argc != 6)
+	{
+		printf("%sError, invalid number of arguments!!\n", yellow);
+		exit(1);
+	}
 	data.nb_of_cycles = 0;
-    j = jawaker(argv);
+	j = jawaker(argv);
 	getvalues(argv, &data, argc);
+	return (0);
 }
