@@ -1,5 +1,6 @@
 RCS		= philo.c \
 pars.c \
+values_init.c \
 
 OBJS	= $(RCS:.c=.o)
 
