@@ -22,7 +22,7 @@ void	checkinput(char **argv, int i, int j)
 	}
 }
 
-int	jawaker(char **argv)
+int	pars(char **argv)
 {
 	int		i;
 	int		j;

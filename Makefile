@@ -1,6 +1,6 @@
 RCS		= philo.c \
 pars.c \
-values_init.c \
+simulation.c
 
 OBJS	= $(RCS:.c=.o)
 
@@ -9,7 +9,7 @@ NAME	= philo
 CFLAGS	= -Wall -Werror -Wextra -g
 
 $(NAME)	: $(OBJS)
-		gcc $(CFLAGS) -o $(NAME) $(RCS)
+		@gcc $(CFLAGS) -o $(NAME) $(RCS)
 
 all	: $(NAME)
 

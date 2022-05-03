@@ -23,25 +23,21 @@ typedef struct s_philo
 	int				left_fork;
 	int				philo_id;
 	int				eat_rounds;
-	struct s_data	*data;
-	pthread_t		philo;
+	int				eat_time;
+	int				sleep_time;
+	int				flag;
+	int				death_time;
+	int				time_round;
+	pthread_t		death;
+	pthread_t		philos;
+	pthread_mutex_t	*forks;
+	int				past;
+	int				time_diff;
 }		t_philo;
 
-typedef struct s_data
-{
-	long int	nb_philo;
-	long int	die_time;
-	long int	rep_time;
-	long int	eat_time;
-	long int	sleep_time;
-	long int	nb_forks;
-	long int	nb_of_cycles;
-	t_philo	*philo;
-}		t_data;
-
 void	checkinput(char **argv, int i, int j);
-int		jawaker(char **argv);
-void	getvalues(char **argv, t_data *data, int argc);
-void	initvalues(t_data *data);
+int		pars(char **argv);
+void	*launch(void *ptr);
+void	eating(t_philo *philo);
 
 #endif
