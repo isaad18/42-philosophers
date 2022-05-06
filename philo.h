@@ -33,11 +33,17 @@ typedef struct s_philo
 	pthread_mutex_t	*forks;
 	int				past;
 	int				time_diff;
+	int				*eat_stop;
+	int				nb_of_philos;
+	int				i;
+	int				j;
 }		t_philo;
 
 void	checkinput(char **argv, int i, int j);
 int		pars(char **argv);
 void	*launch(void *ptr);
 void	eating(t_philo *philo);
+void	dying_timer(t_philo *philo);
+void	*dying_thread(void *ptr);
 
 #endif
