@@ -25,9 +25,10 @@ typedef struct s_philo
 	int				eat_rounds;
 	int				eat_time;
 	int				sleep_time;
-	int				flag;
+	pthread_mutex_t	flag;
 	int				death_time;
 	int				time_round;
+	int				round;
 	pthread_t		death;
 	pthread_t		philos;
 	pthread_mutex_t	*forks;

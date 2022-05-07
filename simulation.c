@@ -8,6 +8,14 @@ int	get_time(void)
 	return ((current.tv_sec * 1000) + (current.tv_usec / 1000));
 }
 
+int	get_timee(void)
+{
+	struct timeval current;
+
+	gettimeofday(&current, NULL);
+	return ((current.tv_sec * 1000) + (current.tv_usec / 1000));
+}
+
 void	sleeping(t_philo *philo)
 {
 	philo->i = 0;
@@ -22,13 +30,18 @@ void	sleeping(t_philo *philo)
 			philo->j++;
 		philo->i++;
 	}
+	if (philo->j == philo->nb_of_philos)
+	{
+		pthread_detach(philo->philos);
+		pthread_detach(philo->death);
+		exit(0);
+	}
 	if (philo->eat_stop[philo->philo_id] == philo->eat_rounds)
 	{
 		pthread_detach(philo->philos);
+		pthread_detach(philo->death);
 		while(1);
 	}
-	if (philo->j == philo->nb_of_philos)
-			exit(0);
 	eating(philo);
 }
 
@@ -36,13 +49,13 @@ void	eating(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->forks[philo->right_fork]);
 	pthread_mutex_lock(&philo->forks[philo->left_fork]);
-	philo->flag = 0;
+	pthread_mutex_lock(&philo->flag);
 	printf("%s%d ms: philo %d took a fork🍴\n", cyan, (get_time() - philo->past), philo->philo_id + 1);
 	printf("%s%d ms: philo %d took a fork🍴\n", cyan, (get_time() - philo->past), philo->philo_id + 1);
 	printf("%s%d ms: philo %d is eating🍝\n", blue, (get_time() - philo->past), philo->philo_id + 1);
 	usleep(philo->eat_time * 1000);
 	philo->time_round = get_time();
-	philo->flag = 1;
+	pthread_mutex_unlock(&philo->flag);
 	pthread_mutex_unlock(&philo->forks[philo->left_fork]);
 	pthread_mutex_unlock(&philo->forks[philo->right_fork]);
 	sleeping(philo);
@@ -50,14 +63,16 @@ void	eating(t_philo *philo)
 
 void	dying_timer(t_philo *philo)
 {
-	philo->time_round = philo->past;
 	while (1)
 	{
-		if ((get_time() - philo->time_round) > philo->death_time && philo->flag == 1)
+		usleep(10);
+		pthread_mutex_lock(&philo->flag);
+		if ((get_time() - philo->time_round) >= philo->death_time)
 		{
 			printf("%s%d ms: philo %d just died😵\n", red, (get_time() - philo->past), philo->philo_id + 1);
 			exit(0);
 		}
+		pthread_mutex_unlock(&philo->flag);
 	}
 }
 
@@ -76,7 +91,7 @@ void	*launch(void *ptr)
 
 	philo = (void *)ptr;
 	philo->past = get_time();
-	while (1)
-		eating(philo);
+	philo->time_round = get_time();
+	eating(philo);
 	return (ptr);
 }

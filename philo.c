@@ -37,7 +37,6 @@ int main(int argc, char **argv)
 		philo[i].right_fork = (i + 1) % (atoi(argv[1]));
 		philo[i].left_fork = i;
 		philo[i].philo_id = i;
-		philo[i].flag = 0;
 		philo[i].eat_time = (atoi(argv[3]));
 		philo[i].death_time = (atoi(argv[2]));
 		philo[i].sleep_time = (atoi(argv[4]));

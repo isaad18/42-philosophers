@@ -6,10 +6,10 @@ OBJS	= $(RCS:.c=.o)
 
 NAME	= philo
 
-CFLAGS	= -Wall -Werror -Wextra -g
+CFLAGS	= -Wall -Werror -Wextra
 
 $(NAME)	: $(OBJS)
-		@gcc $(CFLAGS) -o $(NAME) $(RCS)
+		@gcc $(CFLAGS)  $(RCS) -lpthread -o $(NAME)
 
 all	: $(NAME)
 
