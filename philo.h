@@ -17,20 +17,29 @@
 # define cyan "\033[0;36m"
 # define white "\033[0;37m"
 
+typedef struct s_data
+{
+	int				*conditional_forks;
+}	t_data;
+
 typedef struct s_philo
 {
+	t_data 			*data;
 	int				right_fork;
 	int				left_fork;
 	int				philo_id;
 	int				eat_rounds;
 	int				eat_time;
 	int				sleep_time;
-	pthread_mutex_t	flag;
+	int				flag;
 	int				death_time;
+	int				start_time;
 	int				time_round;
 	int				round;
 	pthread_t		death;
 	pthread_t		philos;
+	pthread_t		*philoss;
+	pthread_mutex_t	holder;
 	pthread_mutex_t	*forks;
 	int				past;
 	int				time_diff;
@@ -38,6 +47,7 @@ typedef struct s_philo
 	int				nb_of_philos;
 	int				i;
 	int				j;
+	int				x;
 }		t_philo;
 
 void	checkinput(char **argv, int i, int j);
