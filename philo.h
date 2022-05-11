@@ -20,10 +20,17 @@
 typedef struct s_data
 {
 	int				*conditional_forks;
+
 }	t_data;
 
 typedef struct s_philo
 {
+	int				round_end;
+	pthread_mutex_t	holder;
+	pthread_mutex_t	holder2;
+	pthread_mutex_t	holder3;
+	pthread_mutex_t	holder4;
+	pthread_mutex_t	holder5;
 	t_data 			*data;
 	int				right_fork;
 	int				left_fork;
@@ -39,7 +46,6 @@ typedef struct s_philo
 	pthread_t		death;
 	pthread_t		philos;
 	pthread_t		*philoss;
-	pthread_mutex_t	holder;
 	pthread_mutex_t	*forks;
 	int				past;
 	int				time_diff;

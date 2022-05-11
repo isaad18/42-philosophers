@@ -54,68 +54,73 @@ void	sleeping(t_philo *philo)
 	{
 		philo->i = 0;
 		philo->j = 0;
+		pthread_mutex_lock(&philo->holder);
 		printf("%s%d ms: philo %d is sleeping😴\n", green, (get_time() - philo->past), philo->philo_id + 1);
+		pthread_mutex_unlock(&philo->holder);
 		dying_sleep(philo);
+		pthread_mutex_lock(&philo->holder);
 		printf("%s%d ms: philo %d is thinking🤔\n", purple, (get_time() - philo->past), philo->philo_id + 1);
-		philo->eat_stop[philo->philo_id] += 1;
-		while (philo->eat_stop[philo->i] && philo->eat_rounds != 0)
-		{
-			if (philo->eat_stop[philo->i] == philo->eat_rounds)
-				philo->j++;
-			philo->i++;
-		}
-		dying_timer(philo);
-		if (philo->j == philo->nb_of_philos)
-		{
-			pthread_detach(philo->philos);
-			pthread_detach(philo->death);
-			exit(0);
-		}
-		dying_timer(philo);
-		if (philo->eat_stop[philo->philo_id] == philo->eat_rounds)
-		{
-			pthread_detach(philo->philos);
-			pthread_detach(philo->death);
-			while(1);
-		}
+		pthread_mutex_unlock(&philo->holder);
+		// philo->round++;
+		// if (philo->round == philo->eat_rounds)
+		// {
+		// 	philo->data->round_end++;
+		// 	pthread_mutex_lock(&philo->holder3);
+		// 	if (philo->data->round_end == philo->nb_of_philos)
+		// 	{
+		// 		pthread_mutex_unlock(&philo->holder3);
+		// 		pthread_detach(philo->philos);
+		// 		pthread_detach(*philo->philoss);
+		// 		while (philo->i < philo->nb_of_philos)
+		// 		{
+		// 			pthread_mutex_destroy(&philo->forks[philo->i]);
+		// 			philo->i++;
+		// 		}
+		// 		exit(0);
+		// 	}
+		// 	else
+		// 	{
+		// 		pthread_mutex_unlock(&philo->holder3);
+		// 		pthread_detach(philo->philos);
+		// 		while (1);
+		// 	}
+		// 	pthread_mutex_unlock(&philo->holder3);
+		// }
 	}
+	philo->flag = 0;
 }
 
 void	eating(t_philo *philo)
 {
 	philo->flag = 0;
-	// while (philo->nb_of_philos == 1)
-	// 	dying_timer(philo);
-	// if ((philo->philo_id + 1) % 2 == 0)
-	// {
-	// 	pthread_mutex_lock(&philo->forks[philo->left_fork]);
-	// 	pthread_mutex_lock(&philo->forks[philo->right_fork]);
-	// }
-	// else
-	// {
-		pthread_mutex_lock(&philo->forks[philo->right_fork]);
-		pthread_mutex_lock(&philo->forks[philo->left_fork]);
-	// }
+	while (philo->nb_of_philos == 1)
+		dying_timer(philo);
 	dying_timer(philo);
+	pthread_mutex_lock(&philo->forks[philo->left_fork]);
+	pthread_mutex_lock(&philo->forks[philo->right_fork]);
+	pthread_mutex_lock(&philo->holder2);
 	if (philo->data->conditional_forks[philo->right_fork] == 0 && philo->data->conditional_forks[philo->left_fork] == 0)
 	{
-		philo->data->conditional_forks[philo->left_fork] = 1;
-		philo->data->conditional_forks[philo->right_fork] = 1;
 		printf("%s%d ms: philo %d took a fork🍴\n", cyan, (get_time() - philo->past), philo->philo_id + 1);
 		printf("%s%d ms: philo %d took a fork🍴\n", cyan, (get_time() - philo->past), philo->philo_id + 1);
 		printf("%s%d ms: philo %d is eating🍝\n", blue, (get_time() - philo->past), philo->philo_id + 1);
+		philo->data->conditional_forks[philo->right_fork] = 1;
+		philo->data->conditional_forks[philo->left_fork] = 1;
+		philo->time_round = get_time();
 		philo->flag = 1;
 	}
+	pthread_mutex_unlock(&philo->holder2);
 	pthread_mutex_unlock(&philo->forks[philo->left_fork]);
 	pthread_mutex_unlock(&philo->forks[philo->right_fork]);
+	pthread_mutex_lock(&philo->holder4);
 	if (philo->flag == 1)
 	{
-		ft_usleep2(philo);
-		// usleep(philo->eat_time * 1000);
-		philo->time_round = get_time();
+		// ft_usleep2(philo);
+		usleep(philo->eat_time * 1000);
 		philo->data->conditional_forks[philo->left_fork] = 0;
 		philo->data->conditional_forks[philo->right_fork] = 0;
 	}
+	pthread_mutex_unlock(&philo->holder4);
 }
 
 void	dying_timer(t_philo *philo)
