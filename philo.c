@@ -4,16 +4,11 @@ int main(int argc, char **argv)
 {
 	int	i;
 	int	j;
+	int	n;
 	t_data			data;
 	int				round_end;
 	t_philo			*philo;
 	pthread_t		*philos;
-	pthread_mutex_t	*forks;
-	pthread_mutex_t	holder;
-	pthread_mutex_t	holder2;
-	pthread_mutex_t	holder3;
-	pthread_mutex_t	holder4;
-	pthread_mutex_t	holder5;
 
 	philo = NULL;
 	if (argc != 5 && argc != 6)
@@ -26,19 +21,20 @@ int main(int argc, char **argv)
 	data.conditional_forks = malloc(sizeof(int) * i);
 	philo = malloc(sizeof(t_philo) * i);
 	philos = malloc(sizeof(pthread_t) * i);
-	forks = malloc(sizeof(pthread_mutex_t) * i);
+	data.forks = malloc(sizeof(pthread_mutex_t) * i);
 	i--;
-	pthread_mutex_init(&holder, NULL);
-	pthread_mutex_init(&holder2, NULL);
-	pthread_mutex_init(&holder3, NULL);
-	pthread_mutex_init(&holder4, NULL);
-	pthread_mutex_init(&holder5, NULL);
+	pthread_mutex_init(&data.holder, NULL);
+	pthread_mutex_init(&data.holder2, NULL);
+	pthread_mutex_init(&data.holder3, NULL);
+	pthread_mutex_init(&data.holder4, NULL);
+	pthread_mutex_init(&data.holder5, NULL);
 	while (i >= 0)
 	{
 		data.conditional_forks[i] = 0;
-		pthread_mutex_init(&forks[i], NULL);
+		pthread_mutex_init(&data.forks[i], NULL);
 		i--;
 	}
+	data.round_end = 0;
 	i = atoi(argv[1]) - 1;
 	j = i + 1;
 	while (i >= 0)
@@ -50,7 +46,6 @@ int main(int argc, char **argv)
 	i = atoi(argv[1]) - 1;
 	while (i >= 0)
 	{
-		philo[i].round_end = round_end;
 		philo[i].philoss = philos;
 		philo[i].nb_of_philos = j;
 		philo[i].right_fork = (i + 1) % (atoi(argv[1]));
@@ -66,27 +61,33 @@ int main(int argc, char **argv)
 		else
 			philo[i].eat_rounds = 0;
 		philo[i].data = &data;
-		philo[i].holder = holder;
-		philo[i].holder2 = holder2;
-		philo[i].holder3 = holder3;
-		philo[i].holder4 = holder4;
-		philo[i].holder4 = holder5;
-		philo[i].forks = forks;
 		i--;
 	}
 	i = atoi(argv[1]) - 1;
-	while (i >= 0)
+	j = i / 10;
+	n = i - j;
+	while(n)
 	{
-		pthread_create(&philo[i].philos, NULL, &launch, &philo[i]);
-		// pthread_create(&philo[i].death, NULL, &dying_thread, &philo[i]);
-		i--;
+		while (i >= 0)
+		{
+			pthread_create(&philo[i].philos, NULL, &launch, &philo[i]);
+			// pthread_create(&philo[i].death, NULL, &dying_thread, &philo[i]);
+			i--;
+		}
+		n -= j;
 	}
 	i = atoi(argv[1]) - 1;
-	while (i >= 0)
+	j = i / 10;
+	n = i - j;
+	while(n)
 	{
-		pthread_join(philo[i].philos, NULL);
-		// pthread_join(philo[i].death, NULL);
-		i--;
+		while (i >= n)
+		{
+			pthread_join(philo[i].philos, NULL);
+			// pthread_join(philo[i].death, NULL);
+			i--;
+		}
+		n -= j;
 	}
 	return (0);
 }
