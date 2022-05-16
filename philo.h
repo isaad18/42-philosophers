@@ -27,6 +27,8 @@ typedef struct s_data
 	pthread_mutex_t	holder3;
 	pthread_mutex_t	holder4;
 	pthread_mutex_t	holder5;
+	pthread_t		*philos;
+	int				nb_of_philos;
 }	t_data;
 
 typedef struct s_philo
@@ -45,11 +47,11 @@ typedef struct s_philo
 	int				round;
 	pthread_t		death;
 	pthread_t		philos;
-	pthread_t		*philoss;
 	int				past;
 	int				time_diff;
+	int				time_diff2;
+	int				time_diff3;
 	int				*eat_stop;
-	int				nb_of_philos;
 	int				i;
 	int				j;
 	int				x;

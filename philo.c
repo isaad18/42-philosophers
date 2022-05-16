@@ -4,11 +4,10 @@ int main(int argc, char **argv)
 {
 	int	i;
 	int	j;
-	int	n;
+	// int	n;
 	t_data			data;
-	int				round_end;
+	// int				round_end;
 	t_philo			*philo;
-	pthread_t		*philos;
 
 	philo = NULL;
 	if (argc != 5 && argc != 6)
@@ -20,14 +19,14 @@ int main(int argc, char **argv)
 	i = atoi(argv[1]);
 	data.conditional_forks = malloc(sizeof(int) * i);
 	philo = malloc(sizeof(t_philo) * i);
-	philos = malloc(sizeof(pthread_t) * i);
+	data.philos = malloc(sizeof(pthread_t) * i);
 	data.forks = malloc(sizeof(pthread_mutex_t) * i);
 	i--;
-	pthread_mutex_init(&data.holder, NULL);
-	pthread_mutex_init(&data.holder2, NULL);
+	// pthread_mutex_init(&data.holder, NULL);
+	// pthread_mutex_init(&data.holder2, NULL);
 	pthread_mutex_init(&data.holder3, NULL);
-	pthread_mutex_init(&data.holder4, NULL);
-	pthread_mutex_init(&data.holder5, NULL);
+	// pthread_mutex_init(&data.holder4, NULL);
+	// pthread_mutex_init(&data.holder5, NULL);
 	while (i >= 0)
 	{
 		data.conditional_forks[i] = 0;
@@ -37,17 +36,16 @@ int main(int argc, char **argv)
 	data.round_end = 0;
 	i = atoi(argv[1]) - 1;
 	j = i + 1;
+	data.nb_of_philos = j;
 	while (i >= 0)
 	{
-		philos[i] = philo[i].philos;
+		data.philos[i] = philo[i].philos;
 		i--;
 	}
-	round_end = 0;
+	// round_end = 0;
 	i = atoi(argv[1]) - 1;
 	while (i >= 0)
 	{
-		philo[i].philoss = philos;
-		philo[i].nb_of_philos = j;
 		philo[i].right_fork = (i + 1) % (atoi(argv[1]));
 		philo[i].left_fork = i;
 		philo[i].philo_id = i;
@@ -64,30 +62,30 @@ int main(int argc, char **argv)
 		i--;
 	}
 	i = atoi(argv[1]) - 1;
-	j = i / 10;
-	n = i - j;
-	while(n)
-	{
+	// j = i / 10;
+	// n = i - j;
+	// while(n)
+	// {
 		while (i >= 0)
 		{
 			pthread_create(&philo[i].philos, NULL, &launch, &philo[i]);
 			// pthread_create(&philo[i].death, NULL, &dying_thread, &philo[i]);
 			i--;
 		}
-		n -= j;
-	}
+	// 	n -= j;
+	// }
 	i = atoi(argv[1]) - 1;
-	j = i / 10;
-	n = i - j;
-	while(n)
-	{
-		while (i >= n)
+	// j = i / 10;
+	// n = i - j;
+	// while(n)
+	// {
+		while (i >= 0)
 		{
 			pthread_join(philo[i].philos, NULL);
 			// pthread_join(philo[i].death, NULL);
 			i--;
 		}
-		n -= j;
-	}
+	// 	n -= j;
+	// }
 	return (0);
 }
