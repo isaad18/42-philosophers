@@ -22,13 +22,17 @@ typedef struct s_data
 	int				*conditional_forks;
 	int				round_end;
 	pthread_mutex_t	*forks;
+	int				x;
 	pthread_mutex_t	holder;
 	pthread_mutex_t	holder2;
 	pthread_mutex_t	holder3;
-	pthread_mutex_t	holder4;
-	pthread_mutex_t	holder5;
+	int				death_flag1;
 	pthread_t		*philos;
+	int				flag2;
 	int				nb_of_philos;
+	struct s_philo	*philo;
+	int				i;
+	int				eat_rounds;
 }	t_data;
 
 typedef struct s_philo
@@ -36,8 +40,8 @@ typedef struct s_philo
 	t_data 			*data;
 	int				right_fork;
 	int				left_fork;
+	int				eat_flag2;
 	int				philo_id;
-	int				eat_rounds;
 	int				eat_time;
 	int				sleep_time;
 	int				flag;
@@ -52,9 +56,7 @@ typedef struct s_philo
 	int				time_diff2;
 	int				time_diff3;
 	int				*eat_stop;
-	int				i;
 	int				j;
-	int				x;
 }		t_philo;
 
 void	checkinput(char **argv, int i, int j);
@@ -63,5 +65,6 @@ void	*launch(void *ptr);
 void	eating(t_philo *philo);
 void	dying_timer(t_philo *philo);
 void	*dying_thread(void *ptr);
+int		get_time(void);
 
 #endif
