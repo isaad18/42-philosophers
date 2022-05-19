@@ -1,30 +1,37 @@
 #include"philo.h"
 
-void	check_bg(int i, t_data *data)
+void	check_bg(t_data *data)
 {
-	int	j;
+	int	x;
 
-	j = i;
 	while (data->death_flag1 == 0)
 	{
-		if (((get_time() - data->philo[j].time_round) > data->philo[j].death_time) && (data->philo[j].eat_flag2 == 0))
+		x = 0;
+		while (x < data->nb_of_philos && data->death_flag1 == 0)
 		{
-			printf("%s%d ms: philo %d just died😵\n", red, (get_time() - data->philo[j].past), data->philo[j].philo_id + 1);
 			pthread_mutex_lock(&data->holder3);
-			data->death_flag1 = 1;
+			if ((get_time() - data->philo[x].time_round) > data->philo[x].death_time && data->philo[x].eat_flag2 == 0)
+			{
+				pthread_mutex_lock(&data->holder2);
+				printf("%s%d ms: philo %d just died😵\n", red, (get_time() - data->philo[x].past), data->philo[x].philo_id + 1);
+				pthread_mutex_unlock(&data->holder2);
+				data->death_flag1 = 1;
+			}
 			pthread_mutex_unlock(&data->holder3);
+			usleep(100);
+			x++;
 		}
 		if (data->death_flag1 == 1)
 		{
 			break;
 		}
+		pthread_mutex_lock(&data->holder);
 		if (data->i == data->nb_of_philos)
 		{
+			pthread_mutex_unlock(&data->holder);
 			break;
 		}
-		j--;
-		if (j == -1)
-			j = i;
+		pthread_mutex_unlock(&data->holder);
 	}
 }
 
@@ -56,9 +63,9 @@ int main(int argc, char **argv)
 		pthread_mutex_init(&data.forks[i], NULL);
 		i--;
 	}
-	pthread_mutex_init(&data.holder, NULL);
 	pthread_mutex_init(&data.holder2, NULL);
 	pthread_mutex_init(&data.holder3, NULL);
+	pthread_mutex_init(&data.holder, NULL);
 	data.round_end = 0;
 	data.flag2 = 1;
 	data.death_flag1 = 0;
@@ -94,11 +101,12 @@ int main(int argc, char **argv)
 	i = atoi(argv[1]) - 1;
 	while (i >= 0)
 	{
+		philo[i].time_round = get_time();
 		pthread_create(&philo[i].philos, NULL, &launch, &philo[i]);
 		i--;
 	}
 	i = atoi(argv[1]) - 1;
-	check_bg(i, &data);
+	check_bg(&data);
 	i = atoi(argv[1]) - 1;
 	while (i >= 0)
 	{

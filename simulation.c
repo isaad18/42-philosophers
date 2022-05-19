@@ -88,8 +88,8 @@ void	eating(t_philo *philo)
 		pthread_mutex_lock(&philo->data->forks[philo->right_fork]);
 		pthread_mutex_lock(&philo->data->forks[philo->left_fork]);
 	}
-	philo->time_round = get_time();
 	pthread_mutex_lock(&philo->data->holder3);
+	philo->time_round = get_time();
 	if (philo->data->death_flag1 == 0)
 		eat(philo);
 	pthread_mutex_unlock(&philo->data->holder3);
@@ -114,23 +114,28 @@ void	*launch(void *ptr)
 
 	philo = (void *)ptr;
 	philo->past = get_time();
-	philo->time_round = get_time();
 	if ((philo->philo_id + 1) % 2 == 0)
-		usleep(1500);
+		usleep(10000);
 	philo->flag = 0;
-	while ((philo->data->death_flag1 == 0) && (philo->eat_flag2 == 0))
+	while (!philo->data->death_flag1)
 	{
 		eating(philo);
-		if (philo->data->death_flag1 == 0)
-			sleeping(philo);
+		pthread_mutex_lock(&philo->data->holder3);
+		if (philo->data->death_flag1)
+		{
+			pthread_mutex_unlock(&philo->data->holder3);
+			break;
+		}
+		pthread_mutex_unlock(&philo->data->holder3);
+		sleeping(philo);
 		if (philo->round == philo->data->eat_rounds)
 			break;
 	}
+	pthread_mutex_lock(&philo->data->holder3);
 	philo->eat_flag2 = 1;
+	pthread_mutex_unlock(&philo->data->holder3);
 	pthread_mutex_lock(&philo->data->holder);
 	philo->data->i++;
 	pthread_mutex_unlock(&philo->data->holder);
-	// if (i == philo->data->nb_of_philos)
-	// 	philo->data->death_flag1 = 1;
 	return (0);
 }
