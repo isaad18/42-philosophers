@@ -66,5 +66,6 @@ void	eating(t_philo *philo);
 void	dying_timer(t_philo *philo);
 void	*dying_thread(void *ptr);
 int		get_time(void);
+int		ft_atoi(const char *str);
 
 #endif
