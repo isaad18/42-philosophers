@@ -83,5 +83,7 @@ void	init_values(char **argv, t_philo *philo, int i);
 void	init_threads(t_data *data, t_philo *philo, char **argv);
 void	init_for_data(t_data *data, int i, char **argv);
 void	check_bg(t_data *data);
+int		check_death_again(t_philo *philo);
+void	print_death(t_data *data, int x);
 
 #endif

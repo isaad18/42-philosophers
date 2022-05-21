@@ -49,9 +49,7 @@ void	check_bg(t_data *data)
 			pthread_mutex_lock(&data->holder3);
 			if ((get_time() - data->philo[x].time_round) > data->philo[x].death_time && data->philo[x].eat_flag2 == 0)
 			{
-				pthread_mutex_lock(&data->holder2);
-				printf("%s%d ms: philo %d just died😵\n", red, (get_time() - data->philo[x].past), data->philo[x].philo_id + 1);
-				pthread_mutex_unlock(&data->holder2);
+				print_death(data, x);
 				data->death_flag1 = 1;
 			}
 			pthread_mutex_unlock(&data->holder3);
@@ -59,10 +57,10 @@ void	check_bg(t_data *data)
 			x++;
 		}
 		if (data->death_flag1 == 1)
-			break;
+			break ;
 		x = check_eat(data);
 		if (x == 1)
-			break;
+			break ;
 	}
 }
 

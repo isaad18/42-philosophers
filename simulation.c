@@ -53,7 +53,8 @@ void	add_finisher(t_philo *philo)
 void	*launch(void *ptr)
 {
 	t_philo	*philo;
-	int		death = 0;
+	int		death;
+	int		x;
 
 	philo = (void *)ptr;
 	add_starter(philo);
@@ -63,16 +64,12 @@ void	*launch(void *ptr)
 	while (!death)
 	{
 		eating(philo);
-		pthread_mutex_lock(&philo->data->holder3);
-		if (philo->data->death_flag1)
-		{
-			pthread_mutex_unlock(&philo->data->holder3);
-			break;
-		}
-		pthread_mutex_unlock(&philo->data->holder3);
+		x = check_death_again(philo);
+		if (x == 1)
+			break ;
 		sleeping(philo);
 		if (philo->round == philo->data->eat_rounds)
-			break;
+			break ;
 		pthread_mutex_lock(&philo->data->holder3);
 		death = philo->data->death_flag1;
 		pthread_mutex_unlock(&philo->data->holder3);
@@ -99,7 +96,8 @@ void	*launch(void *ptr)
 // 		if (philo->data->death_flag1 == 0)
 // 		{
 // 			pthread_mutex_lock(&philo->data->holder2);
-// 			printf("%s%d ms: philo %d took a fork🍴\n", cyan, (get_time() - philo->past), philo->philo_id + 1);
+// 			printf("%s%d ms: philo %d took a fork🍴\n", cyan
+		// , (get_time() - philo->past), philo->philo_id + 1);
 // 			pthread_mutex_unlock(&philo->data->holder2);
 // 		}
 // 		philo->fork_flag = 1;
@@ -114,7 +112,8 @@ void	*launch(void *ptr)
 // 		if (philo->data->death_flag1 == 0)
 // 		{
 // 			pthread_mutex_lock(&philo->data->holder2);
-// 			printf("%s%d ms: philo %d took a fork🍴\n", cyan, (get_time() - philo->past), philo->philo_id + 1);
+// 			printf("%s%d ms: philo %d took a fork🍴\n",
+		// cyan, (get_time() - philo->past), philo->philo_id + 1);
 // 			pthread_mutex_unlock(&philo->data->holder2);
 // 		}
 // 		philo->fork_flag = 2;
@@ -126,7 +125,8 @@ void	*launch(void *ptr)
 // 	{
 // 		philo->time_round = get_time();
 // 		pthread_mutex_lock(&philo->data->holder2);
-// 		printf("%s%d ms: philo %d is eating🍝\n", blue, (get_time() - philo->past), philo->philo_id + 1);
+// 		printf("%s%d ms: philo %d is eating🍝\n", blue,
+		// (get_time() - philo->past), philo->philo_id + 1);
 // 		pthread_mutex_unlock(&philo->data->holder2);
 // 		ft_usleep2(philo);
 // 		pthread_mutex_lock(&philo->data->forks[philo->right_fork]);
