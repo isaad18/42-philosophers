@@ -1,4 +1,4 @@
-#include"philo.h"
+#include"../includes/philo.h"
 
 void	checkinput(char **argv, int i, int j)
 {

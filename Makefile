@@ -1,8 +1,8 @@
-RCS		= philo.c \
-pars.c \
-simulation.c \
-utils.c \
-utils2.c \
+RCS		= ./src/philo.c \
+./src/pars.c \
+./src/simulation.c \
+./src/utils.c \
+./src/utils2.c \
 
 OBJS	= $(RCS:.c=.o)
 

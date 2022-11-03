@@ -1,4 +1,4 @@
-#include"philo.h"
+#include"../includes/philo.h"
 
 int	check_death_again(t_philo *philo)
 {
