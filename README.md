@@ -30,7 +30,11 @@ make all
 ```
 
 ### then execute the program with arguements as follows
+- [Number Of Philosophers] => Number of philosophers or processes you want in your program.
+- [Time To Die] => Time for each of them to live without eating.
+- [Time To Eat] => Time they spend eating.
+- [Time To Sleep] => Time they spend sleeping.
+- [Number Of Rounds] (optional) => Number of eating rounds for the philosophers to stop and quit the program, otherwise it will run infinitly.
 ```
-./philo [Number Of Philosophers] [Time To Die] [Time To Eat] [Time To Sleep] [Number Of Arguements]
+./philo [Number Of Philosophers] [Time To Die] [Time To Eat] [Time To Sleep] [Number Of Rounds]
 ```
-- dfghg
