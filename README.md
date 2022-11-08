@@ -33,3 +33,4 @@ make all
 ```
 ./philo [Number Of Philosophers] [Time To Die] [Time To Eat] [Time To Sleep] [Number Of Arguements]
 ```
+- dfghg
